@@ -6,7 +6,7 @@ from functions import map_agent_func_to_trade_data_handler
 from openai import OpenAI
 
 # ──────────────── Ollama-backed OpenAI client ────────────────
-client = OpenAI(base_url="http://localhost:1143/v1", api_key="ollama")
+client = OpenAI(base_url="http://localhost:11434/v1", api_key="ollama")
 MODEL = "dwightfoster03/functionary-small-v3.1:latest"          # tool-calling model
 
 # ───────────────────── helper utilities ──────────────────────
