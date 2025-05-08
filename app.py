@@ -47,6 +47,7 @@ def call_llm(history, tools=None):
         response_format={"type": "json_object"},
     )
     msg = resp.choices[0].message
+    print("Model response content: " + str(msg.content))
 
     out = {"role": msg.role, "content": msg.content}
     if msg.tool_calls:

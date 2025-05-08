@@ -26,6 +26,12 @@ FUNCTION_DEFS = [
         "parameters": {"type": "object", "properties": {}},
         "callback": default_handler,
     },
+    {
+        "name": "calculate_exp_loss_percentage",
+        "description": "Calculate the percentage of expiration loss.",
+        "parameters": {"type": "object", "properties": {}},
+        "callback": default_handler,
+    },
 ]
 
 def map_agent_func_to_trade_data_handler(data_handler):
@@ -33,5 +39,6 @@ def map_agent_func_to_trade_data_handler(data_handler):
     FUNCTION_DEFS[0]["callback"] = data_handler.get_amount_for_instrument
     FUNCTION_DEFS[1]["callback"] = data_handler.get_max_amount_for_instrument
     FUNCTION_DEFS[2]["callback"] = data_handler.calculate_ach_transactions_sum
+    FUNCTION_DEFS[3]["callback"] = data_handler.calculate_exp_loss_percentage
     return FUNCTION_DEFS
 
