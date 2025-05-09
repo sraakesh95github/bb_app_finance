@@ -164,45 +164,33 @@ if question := st.chat_input("Ask about your trades"):
         assistant["display"] = False
         chat.append(assistant)
 
+    # st.chat_message("assistant").markdown(assistant["content"])
     if assistant["content"]:
         assistant["display"] = True
 
-    # 1️⃣ Extract model tool result
-    try:
-        content_data = json.loads(assistant["content"])
-        if isinstance(content_data, dict) and content_data:
-            if content_data.get("value"):
-                value = content_data["value"]
-                if isinstance(value, list):
-                    value = "\n".join([str(item) for item in value])
+        try:
+            content_data = json.loads(assistant["content"])
+            if isinstance(content_data, dict) and content_data:
+                if content_data.get("value"):
+                    value = content_data["value"]
+                    if isinstance(assistant["content"], list):
+                        value = "\n".join([str(item) for item in value])
+                else:
+                    value = next(iter(content_data.values()))
+                display_chat.append(
+                    {
+                        "role": "assistant",
+                        "content": value,
+                    }
+                )
+                st.chat_message("assistant").markdown(str(value))
             else:
-                value = next(iter(content_data.values()))
-        else:
-            value = assistant["content"]
-    except json.JSONDecodeError:
-        value = assistant["content"]
-
-    # 2️⃣ Combine question and tool output → LLM for natural explanation
-    refinement_prompt = (
-        f"The user asked: '{question}'\n"
-        f"The computed result was:\n{value}\n\n"
-        f"Please explain the result clearly and helpfully."
-    )
-    chat.append({"role": "user", "content": refinement_prompt})
-    refined_response = call_llm(chat)
-    chat.append(refined_response)
-
-    # 3️⃣ Display refined final answer
-    final_msg = json.loads(refined_response["content"])
-    print("Final message content: " + str(list(final_msg.values())))
-    if (len(final_msg) > 1):
-        final_msg = list(final_msg.values())[1]
-    else:
-        final_msg = list(final_msg.values())[0]
-    if isinstance(final_msg, list):
-        final_msg = "\n".join([str(item) for item in final_msg])
-    display_chat.append({"role": "assistant", "content": final_msg})
-    st.chat_message("assistant").markdown(final_msg)
-
-
-
+                st.chat_message("assistant").markdown(assistant["content"])
+        except json.JSONDecodeError:
+                st.chat_message("assistant").markdown(assistant["content"])
+                display_chat.append(
+                        {
+                            "role": "assistant",
+                            "content": assistant["content"],
+                        }
+                    )
